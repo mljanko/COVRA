@@ -301,6 +301,7 @@ const runningGalleries = {
   },
   "ref-hochdorf": {
     title: "Hochdorf Swiss Nutrition AG - Sulgen",
+    details: ["Fassaden und Trennwände mit Sandwichelementen", "Fr. 3.50 Mio."],
     images: [
       "assets/legacy-all/images_typ890_254.jpg",
       "assets/legacy-all/images_typ890_255.jpg",
@@ -345,6 +346,7 @@ const runningGalleries = {
   },
   "ref-busdepot": {
     title: "Busdepot Stadt Winterthur",
+    details: ["Fassadenverkleidung CNS spiegelpoliert, Dacheindeckung Shed Trapezblech", "Fr. 3.00 Mio"],
     images: [
       "assets/legacy-all/images_typ890_215.jpg",
       "assets/legacy-all/images_typ890_216.jpg",
@@ -372,6 +374,7 @@ const runningGalleries = {
   },
   "ref-sicherheit": {
     title: "Sicherheitszentrum - Weinfelden",
+    details: ["Fassadenverkleidung Trapezblech Alu blank und Verbundplatten", "Fr. 300'000.00"],
     images: [
       "assets/legacy-all/images_typ890_247.jpg",
       "assets/legacy-all/images_typ890_248.jpg",

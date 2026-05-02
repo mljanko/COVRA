@@ -1601,6 +1601,18 @@ h3 {
   padding: 28px;
 }
 
+.reference-image-caption {
+  margin: -4px 0 18px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.reference-image-caption span {
+  color: var(--white);
+}
+
 .reference-thumb-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
