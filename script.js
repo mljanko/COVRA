@@ -29,6 +29,12 @@ let activeSlideshow = null;
 let activeSlideIndex = 0;
 let slideshowTimer = null;
 
+const resolveAssetPath = (source) => {
+  if (!source || /^(?:[a-z]+:|\/|#)/i.test(source)) return source;
+  const siteRoot = document.documentElement.dataset.siteRoot || "";
+  return source.startsWith("assets/") ? `${siteRoot}${source}` : source;
+};
+
 const runningGalleries = {
   gallusareal: {
     title: "Gallusareal - 9016 St. Gallen",
@@ -525,7 +531,7 @@ function showSlide(index) {
   slideshowImage.classList.add("is-switching");
   window.setTimeout(() => {
     if (!activeSlideshow || !slideshowImage || !slideshowCount) return;
-    slideshowImage.src = activeSlideshow.images[activeSlideIndex];
+    slideshowImage.src = resolveAssetPath(activeSlideshow.images[activeSlideIndex]);
     slideshowImage.alt = `${activeSlideshow.title} - Bild ${activeSlideIndex + 1}`;
     slideshowCount.textContent = `${activeSlideIndex + 1} / ${activeSlideshow.images.length}`;
     renderSlideshowDots();
@@ -533,17 +539,20 @@ function showSlide(index) {
   }, 120);
 }
 
-const openSlideshow = (galleryKey) => {
+const openSlideshow = (galleryKey, startIndex = 0) => {
   const gallery = runningGalleries[galleryKey];
   if (!gallery || !slideshowModal || !slideshowTitle) return;
   activeSlideshow = gallery;
-  activeSlideIndex = 0;
+  const requestedIndex = Number.parseInt(startIndex, 10);
+  activeSlideIndex = Number.isNaN(requestedIndex)
+    ? 0
+    : Math.min(Math.max(requestedIndex, 0), gallery.images.length - 1);
   slideshowTitle.textContent = gallery.title;
   renderSlideshowCaption();
   slideshowModal.classList.add("is-open");
   slideshowModal.setAttribute("aria-hidden", "false");
   body.classList.add("nav-open");
-  showSlide(0);
+  showSlide(activeSlideIndex);
   startSlideshow();
   slideshowClose?.focus();
 };
@@ -557,7 +566,7 @@ const closeSlideshow = () => {
 };
 
 slideshowTriggers.forEach((trigger) => {
-  trigger.addEventListener("click", () => openSlideshow(trigger.dataset.slideshow));
+  trigger.addEventListener("click", () => openSlideshow(trigger.dataset.slideshow, trigger.dataset.slideIndex));
 });
 
 slideshowClose?.addEventListener("click", closeSlideshow);
