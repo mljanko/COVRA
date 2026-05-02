@@ -19,6 +19,7 @@ const slideshowTriggers = [...document.querySelectorAll("[data-slideshow]")];
 const slideshowModal = document.querySelector("[data-slideshow-modal]");
 const slideshowImage = document.querySelector("[data-slideshow-image]");
 const slideshowTitle = document.querySelector("[data-slideshow-title]");
+const slideshowCaption = document.querySelector("[data-slideshow-caption]");
 const slideshowCount = document.querySelector("[data-slideshow-count]");
 const slideshowDots = document.querySelector("[data-slideshow-dots]");
 const slideshowClose = document.querySelector("[data-slideshow-close]");
@@ -31,6 +32,7 @@ let slideshowTimer = null;
 const runningGalleries = {
   gallusareal: {
     title: "Gallusareal - 9016 St. Gallen",
+    details: ["Tutilo AG - St.Gallen", "Perita AG - St.Gallen"],
     images: [
       "assets/legacy-all/images_typ890_858.jpg",
       "assets/legacy-all/images_typ890_860.jpg",
@@ -41,6 +43,7 @@ const runningGalleries = {
   },
   huber: {
     title: "Huber Kunststoff AG, Gossau SG",
+    details: ["IE Industrial Engineering - 8008 Zürich"],
     images: [
       "assets/legacy-all/images_typ890_719.jpg",
       "assets/legacy-all/images_typ890_720.jpg",
@@ -68,6 +71,7 @@ const runningGalleries = {
   },
   datacenter: {
     title: "Datacenter MCZ, Dielsdorf",
+    details: ["Baltensperger AG - 8181 Höri"],
     images: [
       "assets/legacy-all/images_typ890_738.jpg",
       "assets/legacy-all/images_typ890_739.jpg",
@@ -76,6 +80,7 @@ const runningGalleries = {
   },
   "selfstorage-dietikon": {
     title: "Selfstorage - 8953 Dietikon",
+    details: ["ReGall Generalunternehmung AG - St. Gallen", "Raumwerk AG - Amriswil"],
     images: [
       "assets/legacy-all/images_typ890_850.jpg",
       "assets/legacy-all/images_typ890_851.jpg",
@@ -88,6 +93,7 @@ const runningGalleries = {
   },
   rikon: {
     title: "Werkstattgebäude Rikon - 8486 Rikon im Tösstal",
+    details: ["ROBAUEN AG - Winterthur"],
     images: [
       "assets/legacy-all/images_typ890_835.jpg",
       "assets/legacy-all/images_typ890_836.jpg",
@@ -104,6 +110,7 @@ const runningGalleries = {
   },
   anplaq: {
     title: "Anplaq AG - 7015 Tamins",
+    details: ["Biedenkapp Stahlbau AG - Rheineck", "RITTER SCHUMACHER AG - ARCHITEKTEN ETH HTL AA SIA - Chur"],
     images: [
       "assets/legacy-all/images_typ890_810.jpg",
       "assets/legacy-all/images_typ890_811.jpg",
@@ -118,6 +125,7 @@ const runningGalleries = {
   },
   mittelland: {
     title: "Mittelland Molkerei AG - 5034 Suhr",
+    details: ["Prometplan AG - Brügg"],
     images: [
       "assets/legacy-all/images_typ890_819.jpg",
       "assets/legacy-all/images_typ890_820.jpg",
@@ -128,12 +136,14 @@ const runningGalleries = {
   },
   hiag: {
     title: "HIAG AG - Oerlikon Metco AG - 5212 Hausen",
+    details: ["HIAG Immobilien AG", "Schiess ITI AG - Dübendorf"],
     images: [
       "assets/legacy-all/images_typ890_846.jpg"
     ]
   },
   wallisellen: {
     title: "Neubau MFH - Lägernstrasse 16 - 8304 Wallisellen",
+    details: ["Thomet Partner AG - Lufingen", "Primobilia AG - Wallisellen"],
     images: [
       "assets/running/wallisellen-01.jpg",
       "assets/running/wallisellen-02.jpg",
@@ -145,6 +155,7 @@ const runningGalleries = {
   },
   apfelmatte: {
     title: "Gewerbebau Apfelmatte - 8833 Samstagern",
+    details: ["Hotz Partner AG SIA - Wädenswil", "KMR Immoblien c/o Keller Metallbau AG"],
     images: [
       "assets/running/apfelmatte-01.jpg",
       "assets/running/apfelmatte-02.jpg",
@@ -156,6 +167,7 @@ const runningGalleries = {
   },
   jossi: {
     title: "Jossi Management AG - 8546 Islikon",
+    details: ["MLR Baumanagement GmbH - 8574 Dettighofen"],
     images: [
       "assets/running/jossi-01.jpg",
       "assets/running/jossi-02.jpg",
@@ -172,6 +184,7 @@ const runningGalleries = {
   },
   fahrmaadhof: {
     title: "Fahrmaadhof AG - 9444 Diepoldsau",
+    details: ["CHRISTUZZI Architektur AG - Widnau"],
     images: [
       "assets/running/fahrmaadhof-01.jpg",
       "assets/running/fahrmaadhof-02.jpg",
@@ -187,6 +200,7 @@ const runningGalleries = {
   },
   spross: {
     title: "Spross Transport & Recycling AG - 8004 Zürich",
+    details: ["Schiess ITI AG - 8052 Zürich"],
     images: [
       "assets/running/spross-01.jpg",
       "assets/running/spross-02.jpg",
@@ -493,6 +507,18 @@ const renderSlideshowDots = () => {
   });
 };
 
+const renderSlideshowCaption = () => {
+  if (!slideshowCaption || !activeSlideshow) return;
+  const details = activeSlideshow.details || [];
+  slideshowCaption.replaceChildren();
+  slideshowCaption.hidden = details.length === 0;
+  details.forEach((line) => {
+    const detailLine = document.createElement("span");
+    detailLine.textContent = line;
+    slideshowCaption.append(detailLine);
+  });
+};
+
 function showSlide(index) {
   if (!activeSlideshow || !slideshowImage || !slideshowCount) return;
   activeSlideIndex = (index + activeSlideshow.images.length) % activeSlideshow.images.length;
@@ -513,6 +539,7 @@ const openSlideshow = (galleryKey) => {
   activeSlideshow = gallery;
   activeSlideIndex = 0;
   slideshowTitle.textContent = gallery.title;
+  renderSlideshowCaption();
   slideshowModal.classList.add("is-open");
   slideshowModal.setAttribute("aria-hidden", "false");
   body.classList.add("nav-open");
